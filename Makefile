@@ -17,7 +17,7 @@ build-image:
 	docker build -t test .
 
 test-goss:
-	./dgoss run test
+	GOSS_PATH=$$PWD/goss ./dgoss run test
 
 test-dive:
 	CI=true dive test
