@@ -24,3 +24,6 @@ test-dive:
 
 test-snyk:
 	./snyk container test test --file=Dockerfile --severity-threshold=high
+
+test-docker-scan:
+	docker scan test
