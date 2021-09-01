@@ -4,7 +4,7 @@
 ci: install build-image test
 
 # install testing dependencies
-install: install-goss install-dive install-snyk
+install: install-preflight install-goss install-dive install-snyk
 
 test: test-goss test-dive test-snyk
 
@@ -23,6 +23,8 @@ install-dive:
 install-snyk:
 	./scripts/install-snyk.sh
 
+install-preflight:
+	./scripts/install-preflight.sh
 
 # commands to run tests and scans on `test` image
 test-goss:
