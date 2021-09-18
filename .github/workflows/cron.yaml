@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: set-matrix
-        run: echo "::set-output name=matrix::$(git tag -l)"
+        run: echo "::set-output name=matrix::$(git tag -l | tee)"
       
       - run: echo ${{ steps.set-matrix.outputs.matrix}}
 
