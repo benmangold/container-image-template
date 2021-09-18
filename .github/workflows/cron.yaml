@@ -27,7 +27,7 @@ jobs:
       # - run: echo ${{ toJson(steps.set-matrix.outputs.matrix)}}
 
     outputs:
-      matrix: ${{ toJson(steps.set-matrix.outputs.matrix) }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
 
   rebuild-tags:
