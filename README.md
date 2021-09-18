@@ -4,21 +4,35 @@ Building, testing and publishing images with Docker, Dive, Goss and Snyk.
 
 Requires Linux, Docker, curl.
 
-A docker image is published upon tag creation.  Release automation configured in `.github/workflows/tag.yaml`.
+A Docker image is published upon tag creation.  Release automation configured in `.github/workflows/build-tags.yaml`.
+
+Release Tags, pinned to a Git SHA, are rebuilt and republished daily to pull in security updates.
+
+Released Docker Images are tagged: `${Docker Repo configured in workflow env var}/${GitHub repo name}:${Git Tag value}`
+
+This approach required mutable Docker Image tags.  This risks publishing breaking changes to a public Docker Image tag.
+
+The risk of publishing breaking changes be mitigated by pinning promised packages and implementing thorough tests in `goss.yaml`.
+
+Deleting and re-publishing tags is highly discouraged, and should only be considered in a `break-glass` situation where a tag breaks due to unpinned required dependencies.
 
 ## local use
 
+Full CI workflow.  Installs dependencies and builds image tagged as `test`.
+
 ```bash
-# install dependencies, build image from Dockerfile, run tests and scans
+# install dependencies, build 'test' image from Dockerfile, run tests and scans
 make ci
 
 ```
+
+Locally you'll want to `make install` when first setting up the repo to install dependencies, then run `make test` to build and run tests on the image.
 
 Other `make` commands available:
 
 ```bash
 make install # install dependencies
-make test # build 'test' image, run tests and scans
+make test # build 'test' image from Dockerfile, run tests and scans
 
 ```
 
