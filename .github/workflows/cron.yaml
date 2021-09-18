@@ -1,6 +1,11 @@
 name: cron
 
 on:
+  # build when a new tag is created
+  push:
+    tags:
+      - 'v*.*.*'
+  # rebuild tags on a cron
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron:  '0 * * * *'
@@ -24,7 +29,6 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
-
   rebuild-tags:
 
     needs: provide-tags
@@ -34,25 +38,29 @@ jobs:
     env:
       DOCKER_HUB_ACCOUNT: bmngld
 
+    # run a dynamic matrix of builds, rebuilding and republishing provided tags
     strategy:
       matrix:
-        tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
+        tag: ${{ fromJson(needs.provide-tags.outputs.matrix) }}
 
     steps:
-
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ matrix.tag }}
-
-      - id: set-reponame
-        run: echo "::set-output name=reponame::$( basename `git rev-parse --show-toplevel` )"
 
       - run: make ci
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - run: docker tag test $DOCKER_HUB_ACCOUNT/${{ steps.set-reponame.outputs.reponame }}:${{ matrix.tag }}
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.tag }}
+
+      - id: set-repo-name
+        run: echo "::set-output name=repo-name::$( basename `git rev-parse --show-toplevel` )"
+
+      - id: set-docker-tag
+        run: echo "::set-output name=docker-tag::$DOCKER_HUB_ACCOUNT/${{ steps.set-repo-name.outputs.reponame }}:${{ matrix.tag }}"
+
+      - run: docker tag test ${{ steps.set-docker-tag.outputs.docker-tag }}
 
       - run:  echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username $DOCKER_HUB_ACCOUNT --password-stdin
 
-      - run: docker push $DOCKER_HUB_ACCOUNT/${{ steps.set-reponame.outputs.reponame }}:${{ matrix.tag }}
+      - run: docker push  ${{ steps.set-docker-tag.outputs.docker-tag }}
