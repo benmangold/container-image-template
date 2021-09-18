@@ -36,24 +36,26 @@ jobs:
   
     runs-on: ubuntu-latest
 
-    # env:
-    #   DOCKER_HUB_ACCOUNT: bmngld
+    env:
+      DOCKER_HUB_ACCOUNT: bmngld
     
     strategy:
       matrix:
         tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
     steps:
 
-      # - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.tag }}
 
       - run: echo ${{ matrix.tag }}
-      # - run: echo ${{toJson(steps.split.outputs)}}
-      # - run: make ci
-      #   env:
-      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      # - run: docker tag test $DOCKER_HUB_ACCOUNT/${{ github.event.repository.name }}:${{ steps.vars.outputs.tag }}
+      - run: make ci
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      # - run:  echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username $DOCKER_HUB_ACCOUNT --password-stdin
+      - run: docker tag test $DOCKER_HUB_ACCOUNT/${{ github.event.repository.name }}:${{ matrix.tag }}
 
-      # - run: docker push $DOCKER_HUB_ACCOUNT/${{ github.event.repository.name }}:${{ steps.vars.outputs.tag }}
+      - run:  echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username $DOCKER_HUB_ACCOUNT --password-stdin
+
+      - run: docker push $DOCKER_HUB_ACCOUNT/${{ github.event.repository.name }}:${{ matrix.tag }}
