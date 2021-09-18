@@ -38,10 +38,14 @@ jobs:
     #   matrix:
     #     tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
     steps:
+      - uses: jungwinter/split@v2
+        id: split
+        with:
+          msg: ${{needs.provide-tags.outputs.matrix}}
       # - uses: actions/checkout@v2
 
       # - run: echo ${{ matrix.tag }}
-      - run: echo ${{needs.provide-tags.outputs.matrix}}
+      - run: echo ${{steps.split.outputs}}
       # - run: make ci
       #   env:
       #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
