@@ -62,8 +62,8 @@ jobs:
       - id: set-docker-tag
         run: echo "::set-output name=docker-tag::$( ${{ steps.set-docker-hub.outputs.docker-hub }}/${{ steps.set-repo-name.outputs.repo-name }}:${{ matrix.tag }} )"
 
-      - run: docker tag test ${{ steps.set-docker-tag.outputs.docker-tag }}
+      - run: "docker tag test ${{ steps.set-docker-tag.outputs.docker-tag }}"
 
-      - run:  echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ steps.set-docker-hub.outputs.docker-hub }} --password-stdin
+      - run:  "echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ steps.set-docker-hub.outputs.docker-hub }} --password-stdin"
 
-      - run: docker push  ${{ steps.set-docker-tag.outputs.docker-tag }}
+      - run: "docker push  ${{ steps.set-docker-tag.outputs.docker-tag }}"
