@@ -29,7 +29,7 @@ jobs:
     
     strategy:
       matrix:
-        tag: ${{provide-tags.outputs.matrix}}
+        tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
 
