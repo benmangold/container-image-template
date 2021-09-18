@@ -1,12 +1,12 @@
 # Makefile targets for building and testing container image with Docker, Dive, Goss and Snyk
 
 # full ci workflow
-ci: install build-image test
+ci: install test
 
 # install testing dependencies
 install: install-preflight install-goss install-dive install-snyk
 
-test: test-goss test-dive test-snyk
+test: build-image test-goss test-dive test-snyk
 
 # build image, tagged as `test` 
 build-image:

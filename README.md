@@ -18,8 +18,7 @@ Other `make` commands available:
 
 ```bash
 make install # install dependencies
-make build-image # build image from Dockerfile
-make test # run tests and scans
+make test # build 'test' image, run tests and scans
 
 ```
 
