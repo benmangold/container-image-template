@@ -57,7 +57,7 @@ jobs:
         run: echo "::set-output name=repo-name::$( basename `git rev-parse --show-toplevel` )"
 
       - id: set-docker-tag
-        run: echo "::set-output name=docker-tag::$DOCKER_HUB_ACCOUNT/${{ steps.set-repo-name.outputs.reponame }}:${{ matrix.tag }}"
+        run: echo "::set-output name=docker-tag::${ $DOCKER_HUB_ACCOUNT/${{ steps.set-repo-name.outputs.reponame }}:${{ matrix.tag }} }"
 
       - run: docker tag test ${{ steps.set-docker-tag.outputs.docker-tag }}
 
