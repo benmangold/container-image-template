@@ -1,31 +1,26 @@
 name: cron
 
 on:
-  push:
-    branches:
-  # schedule:
-  #   # * is a special character in YAML so you have to quote this string
-  #   - cron:  '* * * * *'
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 * * * *'
 
 jobs:
+
   provide-tags:
+
     runs-on: ubuntu-latest
+
     steps:
+      # checkout repo with all tags
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      # set matrix output to all git tags listed in a JSON-parsable array    
       - id: set-matrix
         run: echo "::set-output name=matrix::$( jq -cRs 'split("\n")[:-1]' <<< $(git tag -l) )"
       
-      - run: echo ${{ steps.set-matrix.outputs.matrix}}
-
-
-
-      # - id: set-matrix
-      #   run: echo "::set-output name=string::$()"
-
-      # - run: echo ${{ toJson(steps.set-matrix.outputs.matrix)}}
-
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
@@ -42,13 +37,12 @@ jobs:
     strategy:
       matrix:
         tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
+
     steps:
 
       - uses: actions/checkout@v2
         with:
           ref: ${{ matrix.tag }}
-
-      - run: echo ${{ matrix.tag }}
 
       - run: make ci
         env:
