@@ -53,11 +53,14 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+      - id: set-docker-hub
+        run: echo "::set-output name=docker-hub::$( echo $DOCKER_HUB_ACCOUNT )"
+
       - id: set-repo-name
         run: echo "::set-output name=repo-name::$( basename `git rev-parse --show-toplevel` )"
 
       - id: set-docker-tag
-        run: echo "::set-output name=docker-tag::$( ${DOCKER_HUB_ACCOUNT}/${{ steps.set-repo-name.outputs.repo-name }}:${{ matrix.tag }} )"
+        run: echo "::set-output name=docker-tag::$(${{ steps.set-docker-hub.outputs.docker-hub }}/${{ steps.set-repo-name.outputs.repo-name }}:${{ matrix.tag }} )"
 
       - run: docker tag test ${{ steps.set-docker-tag.outputs.docker-tag }}
 
