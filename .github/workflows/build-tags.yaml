@@ -8,10 +8,12 @@ on:
   # rebuild tags on a cron
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "0 * * * *"
+    - cron:  '0 * * * *'
 
 jobs:
+
   provide-tags:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # set matrix output to all git tags listed in a JSON-parsable array
+      # set matrix output to all git tags listed in a JSON-parsable array    
       - id: set-matrix
         run: echo "::set-output name=matrix::$( jq -cRs 'split("\n")[:-1]' <<< $(git tag -l) )"
 
@@ -28,6 +30,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   rebuild-tags:
+
     needs: provide-tags
 
     runs-on: ubuntu-latest
@@ -41,6 +44,7 @@ jobs:
         tag: ${{ fromJson(needs.provide-tags.outputs.matrix) }}
 
     steps:
+
       - uses: actions/checkout@v2
         with:
           ref: ${{ matrix.tag }}
@@ -49,17 +53,14 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - id: set-docker-hub-account
-        run: echo "::set-output name=docker-hub-account::$( echo $DOCKER_HUB_ACCOUNT )"
-
       - id: set-repo-name
         run: echo "::set-output name=repo-name::$( basename `git rev-parse --show-toplevel` )"
 
       - id: set-docker-tag
-        run: echo "::set-output name=docker-tag::${ ${{ steps.set-docker-hub-acount.outputs.docker-hub-account }}/${{ steps.set-repo-name.outputs.repo-name }}:${{ matrix.tag }} }"
+        run: echo "::set-output name=docker-tag::${ ${DOCKER_HUB_ACCOUNT}/${{ steps.set-repo-name.outputs.repo-name }}:${{ matrix.tag }} }"
 
       - run: docker tag test ${{ steps.set-docker-tag.outputs.docker-tag }}
 
-      - run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ steps.set-docker-hub-acount.outputs.docker-hub-account }} --password-stdin
+      - run:  echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username $DOCKER_HUB_ACCOUNT --password-stdin
 
       - run: docker push  ${{ steps.set-docker-tag.outputs.docker-tag }}
