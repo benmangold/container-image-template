@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - id: set-matrix
         run: echo "::set-output name=matrix::$(git tag -l)"
     outputs:
@@ -31,10 +33,10 @@ jobs:
     #   matrix:
     #     tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
     steps:
-      - uses: actions/checkout@v2
+      # - uses: actions/checkout@v2
 
       # - run: echo ${{ matrix.tag }}
-      - run:  echo '${{needs.provide-tags}}''
+      - run:  echo '${{needs.provide-tags.outputs.matrix}}''
       # - run: make ci
       #   env:
       #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
