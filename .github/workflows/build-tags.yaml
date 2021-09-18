@@ -42,6 +42,7 @@ jobs:
     strategy:
       matrix:
         tag: ${{ fromJson(needs.provide-tags.outputs.matrix) }}
+      fail-fast: false
 
     steps:
 
