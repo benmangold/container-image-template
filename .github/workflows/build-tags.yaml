@@ -45,13 +45,13 @@ jobs:
 
     steps:
 
-      - run: make ci
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
       - uses: actions/checkout@v2
         with:
           ref: ${{ matrix.tag }}
+
+      - run: make ci
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - id: set-repo-name
         run: echo "::set-output name=repo-name::$( basename `git rev-parse --show-toplevel` )"
