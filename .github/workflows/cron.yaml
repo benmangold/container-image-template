@@ -15,14 +15,14 @@ jobs:
         with:
           fetch-depth: 0
       - id: set-matrix
-        run: echo "::set-output name=matrix::$(git tag -l | tee)"
+        run: echo "::set-output name=matrix::$( echo $(git tag -l))"
       
       - run: echo ${{ steps.set-matrix.outputs.matrix}}
 
       - run: echo ${{ toJson(steps.set-matrix.outputs.matrix)}}
 
     outputs:
-      matrix: ${{ toJson(steps.set-matrix.outputs.matrix) }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
 
   rebuild-tags:
