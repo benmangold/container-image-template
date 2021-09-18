@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: node
-        image: docker.io/bmngld/container-image-template:v0.0.1
+        image: docker.io/bmngld/container-image-template@sha256:264f9a5f3a8e29943976f181b4e6ddc34d0088eed3abb19da1c0aa5253833089
         ports:
         - containerPort: 3000
           protocol: TCP
