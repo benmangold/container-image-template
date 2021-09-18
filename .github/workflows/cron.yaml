@@ -34,13 +34,14 @@ jobs:
     # env:
     #   DOCKER_HUB_ACCOUNT: bmngld
     
-    strategy:
-      matrix:
-        tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
+    # strategy:
+    #   matrix:
+    #     tag: ${{fromJson(needs.provide-tags.outputs.matrix)}}
     steps:
       # - uses: actions/checkout@v2
 
-      - run: echo ${{ matrix.tag }}
+      # - run: echo ${{ matrix.tag }}
+      - run: echo ${{needs.provide-tags.outputs.matrix}}
       # - run: make ci
       #   env:
       #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
