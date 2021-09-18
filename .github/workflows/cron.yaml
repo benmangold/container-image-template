@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v2
 
       # - run: echo ${{ matrix.tag }}
-      - run:  echo '${{needs.provide-tags.outputs}}''
+      - run:  echo '${{toJson(needs.provide-tags.outputs)}}''
       # - run: make ci
       #   env:
       #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
