@@ -26,7 +26,7 @@ make ci
 
 ```
 
-Locally you'll want to `make install` when first setting up the repo to install dependencies, then run `make test` to build and run tests on the image.
+Locally you'll want to run `make install` once when first setting up the repo to install dependencies, then repeatedly run `make test` to build and run tests on the image.
 
 Other `make` commands available:
 
